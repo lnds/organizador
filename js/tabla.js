@@ -21,6 +21,32 @@ const Tabla = (() => {
     return select;
   }
 
+  function celdaResponsable(tarea, alCambiar) {
+    const select = document.createElement("select");
+    select.className = "sel-responsable";
+
+    const sinNadie = document.createElement("option");
+    sinNadie.value = "";
+    sinNadie.textContent = "Sin responsable";
+    sinNadie.selected = !tarea.responsableId;
+    select.append(sinNadie);
+
+    Almacen.personas().forEach((persona) => {
+      const opcion = document.createElement("option");
+      opcion.value = persona.id;
+      opcion.textContent = persona.nombre;
+      opcion.selected = persona.id === tarea.responsableId;
+      select.append(opcion);
+    });
+
+    select.addEventListener("change", () => {
+      Almacen.cambiarResponsable(tarea.id, select.value);
+      alCambiar();
+    });
+
+    return select;
+  }
+
   function celdaVence(tarea, alCambiar) {
     const campo = document.createElement("input");
     campo.type = "date";
@@ -44,6 +70,9 @@ const Tabla = (() => {
     const tdEstado = document.createElement("td");
     tdEstado.append(celdaEstado(tarea, alCambiar));
 
+    const tdResponsable = document.createElement("td");
+    tdResponsable.append(celdaResponsable(tarea, alCambiar));
+
     const tdVence = document.createElement("td");
     tdVence.append(celdaVence(tarea, alCambiar));
 
@@ -58,7 +87,7 @@ const Tabla = (() => {
     });
     tdAcciones.append(borrar);
 
-    tr.append(tdTitulo, tdEstado, tdVence, tdAcciones);
+    tr.append(tdTitulo, tdEstado, tdResponsable, tdVence, tdAcciones);
     return tr;
   }
 
@@ -79,7 +108,7 @@ const Tabla = (() => {
 
       const thead = document.createElement("thead");
       thead.innerHTML =
-        "<tr><th>Tarea</th><th>Estado</th><th>Vence</th><th></th></tr>";
+        "<tr><th>Tarea</th><th>Estado</th><th>Responsable</th><th>Vence</th><th></th></tr>";
 
       const tbody = document.createElement("tbody");
       tareas.forEach((tarea) => tbody.append(fila(tarea, alCambiar)));

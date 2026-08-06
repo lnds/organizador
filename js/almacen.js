@@ -42,13 +42,13 @@ const Almacen = (() => {
         },
       ],
       tareas: [
-        { id: "t_1", paginaId: "pg_curso", titulo: "Preparar las láminas de la sesión 4", estado: "haciendo", vence: "2026-08-18" },
-        { id: "t_2", paginaId: "pg_curso", titulo: "Grabar la demostración de respaldo", estado: "por-hacer", vence: "2026-08-19" },
-        { id: "t_3", paginaId: "pg_curso", titulo: "Confirmar la sala de Zoom", estado: "lista", vence: "2026-08-11" },
-        { id: "t_4", paginaId: "pg_curso", titulo: "Revisar el material de apoyo", estado: "por-hacer", vence: "" },
-        { id: "t_5", paginaId: "pg_sitio", titulo: "Actualizar los cupos disponibles", estado: "lista", vence: "2026-08-05" },
-        { id: "t_6", paginaId: "pg_sitio", titulo: "Regenerar la tarjeta de compartir", estado: "por-hacer", vence: "2026-08-20" },
-        { id: "t_7", paginaId: "pg_sitio", titulo: "Revisar los textos de la portada", estado: "haciendo", vence: "" },
+        { id: "t_1", paginaId: "pg_curso", titulo: "Preparar las láminas de la sesión 4", estado: "haciendo", vence: "2026-08-18", responsableId: "p_ana" },
+        { id: "t_2", paginaId: "pg_curso", titulo: "Grabar la demostración de respaldo", estado: "por-hacer", vence: "2026-08-19", responsableId: "p_luis" },
+        { id: "t_3", paginaId: "pg_curso", titulo: "Confirmar la sala de Zoom", estado: "lista", vence: "2026-08-11", responsableId: "p_cata" },
+        { id: "t_4", paginaId: "pg_curso", titulo: "Revisar el material de apoyo", estado: "por-hacer", vence: "", responsableId: "" },
+        { id: "t_5", paginaId: "pg_sitio", titulo: "Actualizar los cupos disponibles", estado: "lista", vence: "2026-08-05", responsableId: "p_marco" },
+        { id: "t_6", paginaId: "pg_sitio", titulo: "Regenerar la tarjeta de compartir", estado: "por-hacer", vence: "2026-08-20", responsableId: "p_ana" },
+        { id: "t_7", paginaId: "pg_sitio", titulo: "Revisar los textos de la portada", estado: "haciendo", vence: "", responsableId: "" },
       ],
       adjuntos: [
         {
@@ -158,6 +158,7 @@ const Almacen = (() => {
         titulo,
         estado: "por-hacer",
         vence: "",
+        responsableId: "",
       });
       return escribir(datos);
     },
@@ -174,6 +175,15 @@ const Almacen = (() => {
       const datos = leer();
       datos.tareas = datos.tareas.map((t) =>
         t.id === tareaId ? { ...t, vence } : t
+      );
+      return escribir(datos);
+    },
+
+    /** `responsableId` vacío deja la tarea sin responsable. */
+    cambiarResponsable(tareaId, responsableId) {
+      const datos = leer();
+      datos.tareas = datos.tareas.map((t) =>
+        t.id === tareaId ? { ...t, responsableId } : t
       );
       return escribir(datos);
     },

@@ -17,8 +17,34 @@ const Kanban = (() => {
       div.append(vence);
     }
 
-    div.append(mover(tarea, alCambiar));
+    div.append(responsable(tarea, alCambiar), mover(tarea, alCambiar));
     return div;
+  }
+
+  function responsable(tarea, alCambiar) {
+    const select = document.createElement("select");
+    select.className = "tarjeta-responsable";
+
+    const sinNadie = document.createElement("option");
+    sinNadie.value = "";
+    sinNadie.textContent = "Sin responsable";
+    sinNadie.selected = !tarea.responsableId;
+    select.append(sinNadie);
+
+    Almacen.personas().forEach((persona) => {
+      const opcion = document.createElement("option");
+      opcion.value = persona.id;
+      opcion.textContent = persona.nombre;
+      opcion.selected = persona.id === tarea.responsableId;
+      select.append(opcion);
+    });
+
+    select.addEventListener("change", () => {
+      Almacen.cambiarResponsable(tarea.id, select.value);
+      alCambiar();
+    });
+
+    return select;
   }
 
   // Sin arrastrar: el estado se cambia con el selector de la propia tarjeta

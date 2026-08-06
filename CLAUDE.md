@@ -36,7 +36,7 @@ Todo cuelga de un solo objeto guardado bajo la clave `organizador.datos`.
 ```
 personas: [{ id, nombre }]
 paginas:  [{ id, nombre, texto, archivada }]
-tareas:   [{ id, paginaId, titulo, estado, vence }]
+tareas:   [{ id, paginaId, titulo, estado, vence, responsableId }]
 adjuntos: [{ id, paginaId, nombre, tipo, contenido }]
 ```
 
@@ -44,6 +44,8 @@ adjuntos: [{ id, paginaId, nombre, tipo, contenido }]
 - **`estado`** es uno de los identificadores de `Almacen.estados()`: `por-hacer`,
   `haciendo` o `lista`. Ese orden es el de las columnas del tablero.
 - **`vence`** es una fecha `AAAA-MM-DD`, o cadena vacía cuando no tiene plazo.
+- **`responsableId`** es el `id` de una persona del equipo, o cadena vacía cuando
+  la tarea no tiene responsable.
 - **`archivada`** saca la página de la barra lateral sin borrarla. `Almacen.paginas()`
   devuelve solo las activas; las otras salen de `Almacen.paginasArchivadas()`.
 - **`tipo`** de un adjunto es `texto` cuando se puede leer en pantalla y `binario`

@@ -281,7 +281,7 @@ button.nombre-pagina:hover { background: #e8e0d2; }
 .tabla td { padding: 11px 16px; border-bottom: 1px solid var(--linea); }
 .tabla tr:last-child td { border-bottom: 0; }
 
-.sel-estado, .campo-fecha {
+.sel-estado, .sel-responsable, .campo-fecha {
   padding: 5px 8px; border: 1px solid var(--linea);
   border-radius: 7px; background: var(--fondo);
 }
@@ -321,7 +321,7 @@ button.nombre-pagina:hover { background: #e8e0d2; }
 .tarjeta-titulo { font-size: .93rem; }
 .tarjeta-vence { font-size: .78rem; color: var(--tenue); }
 
-.tarjeta-mover {
+.tarjeta-responsable, .tarjeta-mover {
   padding: 4px 8px; font-size: .8rem;
   border: 1px solid var(--linea); border-radius: 7px; background: var(--fondo);
 }
