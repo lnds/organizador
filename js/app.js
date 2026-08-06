@@ -1,59 +1,106 @@
-// Dibuja la lista y traduce los clics en llamadas al almacén.
+// Arma la barra lateral, recuerda qué página y qué vista están activas, y le
+// pide a Tabla o a Kanban que dibujen el panel.
 
-const lista = document.getElementById("lista");
-const vacio = document.getElementById("vacio");
-const resumen = document.getElementById("resumen");
-const form = document.getElementById("form-tarea");
-const campoTitulo = document.getElementById("titulo");
+const panel = document.getElementById("panel");
+const listaPaginas = document.getElementById("lista-paginas");
+const listaPersonas = document.getElementById("lista-personas");
+const tituloPagina = document.getElementById("titulo-pagina");
+const formPagina = document.getElementById("form-pagina");
+const nombrePagina = document.getElementById("nombre-pagina");
+const formTarea = document.getElementById("form-tarea");
+const tituloTarea = document.getElementById("titulo-tarea");
+const botonTabla = document.getElementById("vista-tabla");
+const botonKanban = document.getElementById("vista-kanban");
 
-// El orden de la lista se decide aquí, en un solo lugar
-function ordenar(tareas) {
-  return [...tareas];
+let paginaActiva = null;
+let vistaActiva = "tabla";
+
+function pintarPaginas() {
+  const paginas = Almacen.paginas();
+
+  listaPaginas.replaceChildren(
+    ...paginas.map((pagina) => {
+      const item = document.createElement("li");
+      const boton = document.createElement("button");
+      boton.type = "button";
+      boton.textContent = pagina.nombre;
+      boton.className = pagina.id === paginaActiva ? "activa" : "";
+      boton.addEventListener("click", () => {
+        paginaActiva = pagina.id;
+        pintar();
+      });
+      item.append(boton);
+      return item;
+    })
+  );
 }
 
-function dibujarTarea(tarea) {
-  const item = document.createElement("li");
-  item.className = tarea.hecha ? "tarea hecha" : "tarea";
-  item.dataset.id = tarea.id;
-
-  const check = document.createElement("input");
-  check.type = "checkbox";
-  check.checked = tarea.hecha;
-  check.addEventListener("change", () => pintar(Almacen.alternarHecha(tarea.id)));
-
-  const titulo = document.createElement("span");
-  titulo.className = "titulo";
-  titulo.textContent = tarea.titulo;
-
-  const borrar = document.createElement("button");
-  borrar.className = "borrar";
-  borrar.textContent = "Borrar";
-  borrar.addEventListener("click", () => pintar(Almacen.borrar(tarea.id)));
-
-  item.append(check, titulo, borrar);
-  return item;
+function pintarPersonas() {
+  listaPersonas.replaceChildren(
+    ...Almacen.personas().map((persona) => {
+      const item = document.createElement("li");
+      item.className = "persona";
+      item.innerHTML = `<span class="inicial">${persona.nombre[0]}</span>${persona.nombre}`;
+      return item;
+    })
+  );
 }
 
-function pintar(tareas) {
-  lista.replaceChildren(...ordenar(tareas).map(dibujarTarea));
-
-  vacio.style.display = tareas.length === 0 ? "block" : "none";
-
-  const pendientes = tareas.filter((tarea) => !tarea.hecha).length;
-  resumen.textContent =
-    tareas.length === 0
-      ? ""
-      : `${pendientes} ${pendientes === 1 ? "pendiente" : "pendientes"} de ${tareas.length}`;
+function pintarPanel() {
+  const tareas = Almacen.tareasDe(paginaActiva);
+  const vista = vistaActiva === "tabla" ? Tabla : Kanban;
+  vista.dibujar(panel, tareas, pintar);
 }
 
-form.addEventListener("submit", (evento) => {
-  evento.preventDefault();
-  const titulo = campoTitulo.value.trim();
-  if (!titulo) return;
+function pintar() {
+  const paginas = Almacen.paginas();
+  if (!paginas.some((p) => p.id === paginaActiva)) {
+    paginaActiva = paginas.length ? paginas[0].id : null;
+  }
 
-  pintar(Almacen.agregar(titulo));
-  campoTitulo.value = "";
-  campoTitulo.focus();
+  const pagina = Almacen.pagina(paginaActiva);
+  tituloPagina.textContent = pagina ? pagina.nombre : "Sin páginas";
+  formTarea.style.display = pagina ? "flex" : "none";
+
+  botonTabla.classList.toggle("activa", vistaActiva === "tabla");
+  botonKanban.classList.toggle("activa", vistaActiva === "kanban");
+
+  pintarPaginas();
+  pintarPersonas();
+
+  if (pagina) pintarPanel();
+  else panel.replaceChildren();
+}
+
+botonTabla.addEventListener("click", () => {
+  vistaActiva = "tabla";
+  pintar();
 });
 
-pintar(Almacen.listar());
+botonKanban.addEventListener("click", () => {
+  vistaActiva = "kanban";
+  pintar();
+});
+
+formPagina.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+  const nombre = nombrePagina.value.trim();
+  if (!nombre) return;
+
+  Almacen.agregarPagina(nombre);
+  nombrePagina.value = "";
+  pintar();
+});
+
+formTarea.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+  const titulo = tituloTarea.value.trim();
+  if (!titulo || !paginaActiva) return;
+
+  Almacen.agregarTarea(paginaActiva, titulo);
+  tituloTarea.value = "";
+  tituloTarea.focus();
+  pintar();
+});
+
+pintar();

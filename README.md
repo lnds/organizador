@@ -1,15 +1,15 @@
 # Organizador
 
-Lista de tareas que corre entera en el navegador. Sin servidor, sin cuentas y
-sin instalación.
+Organizador de trabajo que corre entero en el navegador: páginas, tabla y
+tablero. Sin servidor, sin cuentas y sin instalación.
 
-Se usa para el curso **IA aplicada al trabajo profesional con Claude**, en la
+Se usa en el curso **IA aplicada al trabajo profesional con Claude**, en la
 sesión sobre Claude Code: es el proyecto preparado sobre el que se construye una
 funcionalidad nueva en vivo.
 
 ## Cómo se abre
 
-Descarga o clona el repositorio y abre `index.html` con doble clic. No hace
+Clona o descarga el repositorio y abre `index.html` con doble clic. No hace
 falta nada más.
 
 Si prefieres servirlo:
@@ -22,24 +22,26 @@ Y luego visita `http://localhost:8000`.
 
 ## Qué hace hoy
 
-- Agregar tareas
-- Marcarlas como hechas
-- Borrarlas
-- Contar cuántas quedan pendientes
+- **Páginas** en la barra lateral, para separar ámbitos de trabajo
+- **Tabla** con el estado y la fecha de vencimiento de cada tarea
+- **Tablero** con una columna por estado
+- **Equipo**: una lista de personas definida en los datos
 
-Las tareas se guardan en el navegador, así que siguen ahí al recargar. Cada
-navegador tiene su propia lista.
+Todo se guarda en el navegador, así que sigue ahí al recargar. Cada navegador
+tiene sus propios datos.
 
 ## Cómo está organizado
 
 ```
 index.html        La página
 css/estilo.css    El estilo
-js/almacen.js     Guarda y recupera las tareas
-js/app.js         Dibuja la lista y atiende los clics
+js/almacen.js     Guarda y recupera los datos
+js/tabla.js       Vista de tabla
+js/kanban.js      Vista de tablero
+js/app.js         Barra lateral y navegación
 CLAUDE.md         Instrucciones para el agente
 ```
 
 `CLAUDE.md` es el archivo que lee Claude Code antes de trabajar en el proyecto.
-Ahí están las reglas de la casa: cómo se separan las responsabilidades, cómo se
+Ahí están el modelo de datos, cómo se separan las responsabilidades, cómo se
 prueba un cambio y qué no se debe hacer.
