@@ -46,18 +46,14 @@ function accionPagina(texto, titulo, alHacerClic) {
   return boton;
 }
 
+// Sin acciones al lado del nombre: estorbaban al hacer clic para navegar.
+// Archivar vive dentro de la página, en su cabecera.
 function pintarPaginas() {
   listaPaginas.replaceChildren(
     ...Almacen.paginas().map((pagina) => {
       const item = document.createElement("li");
       item.className = "item-pagina";
-      item.append(
-        botonPagina(pagina, pagina.id === paginaActiva),
-        accionPagina("Archivar", `Archivar ${pagina.nombre}`, () => {
-          Almacen.archivarPagina(pagina.id, true);
-          pintar();
-        })
-      );
+      item.append(botonPagina(pagina, pagina.id === paginaActiva));
       return item;
     })
   );
@@ -138,6 +134,7 @@ function pintar() {
   }
   formTarea.style.display = hayPagina ? "flex" : "none";
   textoPagina.style.display = hayPagina ? "block" : "none";
+  abrirMenu.parentElement.style.display = hayPagina ? "block" : "none";
   document.querySelector(".barra-adjuntar").style.display = hayPagina ? "flex" : "none";
 
   // Solo se reescribe al cambiar de página: hacerlo siempre movería el cursor
@@ -167,6 +164,34 @@ function pintar() {
 
 const botonTabla = document.getElementById("vista-tabla");
 const botonKanban = document.getElementById("vista-kanban");
+const abrirMenu = document.getElementById("abrir-menu");
+const menuPagina = document.getElementById("menu-pagina");
+const botonArchivar = document.getElementById("archivar-pagina");
+
+function cerrarMenu() {
+  menuPagina.hidden = true;
+  abrirMenu.setAttribute("aria-expanded", "false");
+}
+
+abrirMenu.addEventListener("click", (evento) => {
+  evento.stopPropagation();
+  const abierto = !menuPagina.hidden;
+  menuPagina.hidden = abierto;
+  abrirMenu.setAttribute("aria-expanded", String(!abierto));
+});
+
+// Cerrar al hacer clic en cualquier otra parte o con Escape
+document.addEventListener("click", cerrarMenu);
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape") cerrarMenu();
+});
+
+botonArchivar.addEventListener("click", () => {
+  if (!paginaActiva) return;
+  Almacen.archivarPagina(paginaActiva, true);
+  cerrarMenu();
+  pintar();
+});
 
 botonTabla.addEventListener("click", () => {
   vistaActiva = "tabla";

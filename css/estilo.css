@@ -66,7 +66,37 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 #form-pagina button:hover { border-color: var(--acento); color: var(--acento); }
 
-/* Páginas: las acciones aparecen al pasar el mouse */
+/* Menú de la página */
+
+.menu { position: relative; }
+
+.mas {
+  width: 32px; height: 32px; line-height: 1;
+  display: grid; place-items: center;
+  border: 0; border-radius: 8px;
+  background: transparent; color: var(--tenue); cursor: pointer;
+  font-size: 1.1rem; letter-spacing: .05em;
+}
+
+.mas:hover { background: var(--lateral); color: var(--tinta); }
+
+.menu-lista {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 10;
+  min-width: 180px; padding: 6px;
+  background: var(--tarjeta); border: 1px solid var(--linea);
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(38, 32, 25, .14);
+}
+
+.menu-lista button {
+  width: 100%; text-align: left;
+  padding: 8px 10px; font-size: .9rem;
+  border: 0; border-radius: 7px;
+  background: transparent; cursor: pointer;
+}
+
+.menu-lista button:hover { background: var(--lateral); }
+
+/* Páginas archivadas: ahí sí conviene tener las acciones al lado */
 
 .item-pagina { display: flex; align-items: center; gap: 2px; }
 
