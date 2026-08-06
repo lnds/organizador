@@ -20,6 +20,8 @@ personas en los datos, no un sistema de cuentas.
 | `index.html` | La estructura de la página. Solo marcado, sin lógica. |
 | `css/estilo.css` | Todo el estilo. Los colores salen de las variables de `:root`. |
 | `js/almacen.js` | Lo único que sabe cómo se guardan los datos. |
+| `js/markdown.js` | Convierte markdown a HTML, escrito a mano. |
+| `js/adjuntos.js` | Subir, listar y mostrar los adjuntos de una página. |
 | `js/tabla.js` | Dibuja la vista de tabla. |
 | `js/kanban.js` | Dibuja la vista de tablero. |
 | `js/app.js` | Barra lateral, qué página y qué vista están activas. |
@@ -33,14 +35,19 @@ Todo cuelga de un solo objeto guardado bajo la clave `organizador.datos`.
 
 ```
 personas: [{ id, nombre }]
-paginas:  [{ id, nombre }]
+paginas:  [{ id, nombre, texto, archivada }]
 tareas:   [{ id, paginaId, titulo, estado, vence }]
+adjuntos: [{ id, paginaId, nombre, tipo, contenido }]
 ```
 
 - **`personas`** es el equipo. Está definido y disponible en `Almacen.personas()`.
 - **`estado`** es uno de los identificadores de `Almacen.estados()`: `por-hacer`,
   `haciendo` o `lista`. Ese orden es el de las columnas del tablero.
 - **`vence`** es una fecha `AAAA-MM-DD`, o cadena vacía cuando no tiene plazo.
+- **`archivada`** saca la página de la barra lateral sin borrarla. `Almacen.paginas()`
+  devuelve solo las activas; las otras salen de `Almacen.paginasArchivadas()`.
+- **`tipo`** de un adjunto es `texto` cuando se puede leer en pantalla y `binario`
+  cuando solo se ofrece para descargar. Los `.md` se muestran renderizados.
 
 Un campo nuevo en una tarea se agrega primero en `almacen.js`, incluyendo la
 semilla, y recién después se usa en las vistas.
@@ -60,11 +67,14 @@ semilla, y recién después se usa en las vistas.
 No hay pruebas automatizadas. Se comprueba a mano, en este orden:
 
 1. Abrir `index.html` en el navegador.
-2. Cambiar de página en la barra lateral y confirmar que las tareas cambian.
+2. Cambiar de página en la barra lateral y confirmar que cambian el título, el
+   texto, los adjuntos y las tareas.
 3. En la tabla, cambiar el estado de una tarea.
 4. Pasar a la vista de tablero y confirmar que esa tarea quedó en la columna nueva.
 5. Recargar la página y confirmar que todo sigue ahí.
-6. Agregar una tarea y confirmar que aparece en las dos vistas.
+6. Editar el título de la página y confirmar que cambia también en la barra lateral.
+7. Adjuntar un `.md` y confirmar que se ve renderizado al abrirlo.
+8. Archivar una página, restaurarla, y recién ahí probar borrarla.
 
 Si un cambio toca el almacén, el paso 5 no se salta nunca: es el que detecta los
 datos que se pierden al recargar.

@@ -18,7 +18,7 @@ body {
   line-height: 1.5;
 }
 
-button, input, select { font: inherit; color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
 
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
@@ -66,6 +66,42 @@ button, input, select { font: inherit; color: inherit; }
 
 #form-pagina button:hover { border-color: var(--acento); color: var(--acento); }
 
+/* Páginas: las acciones aparecen al pasar el mouse */
+
+.item-pagina { display: flex; align-items: center; gap: 2px; }
+
+.nombre-pagina {
+  flex: 1; min-width: 0; text-align: left;
+  padding: 8px 10px; border: 0; border-radius: 8px;
+  background: transparent; cursor: pointer;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+button.nombre-pagina:hover { background: #e8e0d2; }
+.nombre-pagina.activa { background: var(--acento-suave); color: var(--acento); font-weight: 700; }
+
+/* display:none y no opacity: si no, ocupan ancho y recortan el nombre */
+.accion-pagina {
+  display: none; flex-shrink: 0;
+  padding: 4px 7px; font-size: .72rem;
+  border: 0; border-radius: 6px;
+  background: transparent; color: var(--tenue); cursor: pointer;
+}
+
+.item-pagina:hover .accion-pagina { display: block; }
+.accion-pagina:hover { background: var(--tarjeta); color: var(--acento); }
+
+.item-pagina.archivada .nombre-pagina { color: var(--tenue); font-size: .9rem; }
+
+.enlace {
+  border: 0; background: transparent; cursor: pointer;
+  font-size: .78rem; color: var(--tenue); padding: 4px 0; text-align: left;
+}
+
+.enlace:hover { color: var(--acento); }
+
+#lista-archivadas { list-style: none; display: grid; gap: 2px; margin-top: 4px; }
+
 .equipo { margin-top: auto; }
 
 .persona {
@@ -86,7 +122,89 @@ button, input, select { font: inherit; color: inherit; }
 
 .cabecera { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
-.cabecera h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em; }
+.cabecera h1 { flex: 1; min-width: 0; }
+
+#titulo-pagina {
+  width: 100%;
+  font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em;
+  padding: 4px 8px; margin-left: -8px;
+  border: 1px solid transparent; border-radius: 8px;
+  background: transparent;
+}
+
+#titulo-pagina:hover:not(:disabled) { border-color: var(--linea); }
+#titulo-pagina:focus { outline: 0; border-color: var(--acento); background: var(--tarjeta); }
+#titulo-pagina:disabled { color: var(--tenue); }
+
+/* Adjuntos */
+
+.barra-adjuntar { display: flex; align-items: center; gap: 12px; }
+
+.adjuntar {
+  display: inline-block; cursor: pointer;
+  padding: 7px 14px; font-size: .86rem;
+  border: 1px solid var(--linea); border-radius: 8px; background: var(--tarjeta);
+}
+
+.adjuntar:hover { border-color: var(--acento); color: var(--acento); }
+
+.error { font-size: .84rem; color: var(--acento); }
+
+#adjuntos { display: grid; gap: 6px; }
+
+.adjunto { border: 1px solid var(--linea); border-radius: 10px; background: var(--tarjeta); }
+
+.adjunto summary {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; cursor: pointer; font-size: .9rem;
+}
+
+.adjunto summary::-webkit-details-marker { display: none; }
+.adjunto summary::before { content: "▸"; color: var(--tenue); font-size: .8rem; }
+.adjunto[open] summary::before { content: "▾"; }
+
+.adj-nombre { flex: 1; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .84rem; }
+
+.adj-acciones { display: flex; gap: 6px; }
+
+.adj-boton {
+  padding: 3px 10px; font-size: .78rem; text-decoration: none;
+  border: 1px solid var(--linea); border-radius: 6px;
+  background: transparent; color: var(--tenue); cursor: pointer;
+}
+
+.adj-boton:hover { border-color: var(--acento); color: var(--acento); }
+
+.adj-cuerpo { padding: 4px 18px 18px; border-top: 1px solid var(--linea); }
+
+.adj-cuerpo pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .82rem; white-space: pre-wrap; word-break: break-word;
+  background: var(--fondo); padding: 12px; border-radius: 8px; margin-top: 14px;
+}
+
+.adj-aviso { color: var(--tenue); font-size: .88rem; margin-top: 14px; }
+
+/* Markdown renderizado */
+
+.md h1, .md h2, .md h3, .md h4 { margin: 18px 0 6px; letter-spacing: -.01em; }
+.md h1 { font-size: 1.3rem; }
+.md h2 { font-size: 1.1rem; }
+.md h3, .md h4 { font-size: .96rem; }
+.md p { margin: 8px 0; font-size: .93rem; }
+.md ul { margin: 8px 0 8px 20px; }
+.md li { font-size: .93rem; margin: 3px 0; }
+.md code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .85em; background: var(--fondo); padding: 1px 5px; border-radius: 4px;
+}
+.md pre { margin: 10px 0; }
+.md pre code { background: transparent; padding: 0; }
+.md blockquote {
+  margin: 10px 0; padding: 4px 14px;
+  border-left: 3px solid var(--acento); color: var(--tenue);
+}
+.md a { color: var(--acento); }
 
 .vistas { display: flex; gap: 4px; background: var(--lateral); padding: 4px; border-radius: 10px; }
 
@@ -96,6 +214,15 @@ button, input, select { font: inherit; color: inherit; }
 }
 
 .vistas button.activa { background: var(--tarjeta); font-weight: 700; box-shadow: 0 1px 3px rgba(38,32,25,.12); }
+
+#texto-pagina {
+  width: 100%; min-height: 60px; resize: none; overflow: hidden;
+  padding: 12px 14px; border: 1px solid transparent; border-radius: 10px;
+  background: transparent; color: var(--tenue); line-height: 1.6;
+}
+
+#texto-pagina:hover { border-color: var(--linea); }
+#texto-pagina:focus { outline: 0; border-color: var(--acento); background: var(--tarjeta); color: var(--tinta); }
 
 #form-tarea { display: flex; gap: 10px; }
 

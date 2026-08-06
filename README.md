@@ -25,6 +25,9 @@ Y luego visita `http://localhost:8000`.
 - **Páginas** en la barra lateral, para separar ámbitos de trabajo
 - **Tabla** con el estado y la fecha de vencimiento de cada tarea
 - **Tablero** con una columna por estado
+- **Texto** libre en cada página, para anotar de qué se trata
+- **Adjuntos** por página, con los markdown renderizados en pantalla
+- **Archivar y borrar** páginas
 - **Equipo**: una lista de personas definida en los datos
 
 Todo se guarda en el navegador, así que sigue ahí al recargar. Cada navegador
